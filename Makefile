@@ -7,6 +7,11 @@ ifeq (0,${MAKELEVEL})
 	MAKE := ${MAKE} TOP_DIR=${TOP_DIR} PRJ_DIR=${PRJ_DIR} V=${V}
 endif
 
+# PREFIX can be overridden using an environment variable
+ifeq ($(PREFIX),)
+    PREFIX := /usr/local
+endif
+
 venv:
 	( \
 		if [ ! -e venv ] ; then \
@@ -16,7 +21,7 @@ venv:
 	)
 
 # see https://idle.run/simple-pex
-build: venv
+build sample_n_files.pex: venv
 	( \
 		source venv/bin/activate && \
 		pip wheel -w . . && \
@@ -26,6 +31,10 @@ build: venv
 oldbuild:
 	pip wheel -w . .
 	pex --python-shebang="$(shell pyenv which python3.6)" -f $(PWD) -r ./requirements.txt sample_n_files -e sample_n_files -o sample_n_files.pex ; \
+
+install: build
+	install -d $(DESTDIR)$(PREFIX)/bin/
+	install -m 755 sample_n_files.pex $(DESTDIR)$(PREFIX)/bin/sample-n-files
 
 clean:
 	-rm -f *.whl *.pex
