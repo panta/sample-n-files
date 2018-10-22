@@ -12,7 +12,7 @@ import shutil
 @click.option('--verbose', default=False, type=click.BOOL, help='Be verbose')
 @click.argument('src', nargs=1, type=click.Path(exists=True, file_okay=False, dir_okay=True, readable=True))
 @click.argument('dst', nargs=1, type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True))
-def main(count, prefix, printonly, verbose, src, dst):
+def cli(count, prefix, printonly, verbose, src, dst):
 	"""Sample `count` files, copying them from `src` to `dst`"""
 
 	def is_candidate(pathname, prefix=""):
@@ -40,4 +40,4 @@ def main(count, prefix, printonly, verbose, src, dst):
 
 
 if __name__ == '__main__':
-	main()
+	cli()
